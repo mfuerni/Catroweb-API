@@ -1321,6 +1321,7 @@ class ProjectsController extends Controller
     $limit = $request->query->get('limit');
     $offset = $request->query->get('offset');
     $flavor = $request->query->get('flavor');
+    $attributes = $request->query->get('attributes');
 
     // Use the default value if no value was provided
 
@@ -1330,6 +1331,7 @@ class ProjectsController extends Controller
       $limit = $this->deserialize($limit, 'int', 'string');
       $offset = $this->deserialize($offset, 'int', 'string');
       $flavor = $this->deserialize($flavor, 'string', 'string');
+      $attributes = $this->deserialize($attributes, 'string', 'string');
     } catch (SerializerRuntimeException $exception) {
       return $this->createBadRequestResponse($exception->getMessage());
     }
@@ -1361,6 +1363,13 @@ class ProjectsController extends Controller
     if ($response instanceof Response) {
       return $response;
     }
+    $asserts = [];
+    $asserts[] = new Assert\Type('string');
+    $asserts[] = new Assert\Regex('/^[a-zA-Z0-9\\-_]+(,[a-zA-Z0-9\\-_]+)*$/');
+    $response = $this->validate($attributes, $asserts);
+    if ($response instanceof Response) {
+      return $response;
+    }
 
     try {
       $handler = $this->getApiHandler();
@@ -1371,7 +1380,7 @@ class ProjectsController extends Controller
       // Make the call to the business logic
       $responseCode = 200;
       $responseHeaders = [];
-      $result = $handler->projectsUserGet($max_version, $limit, $offset, $flavor, $responseCode, $responseHeaders);
+      $result = $handler->projectsUserGet($max_version, $limit, $offset, $flavor, $attributes, $responseCode, $responseHeaders);
 
       // Find default response message
       $message = '';

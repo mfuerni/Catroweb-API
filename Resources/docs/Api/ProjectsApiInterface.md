@@ -685,7 +685,7 @@ No authorization required
 [[Back to top]](#) [[Back to API list]](../../README.md#documentation-for-api-endpoints) [[Back to Model list]](../../README.md#documentation-for-models) [[Back to README]](../../README.md)
 
 ## **projectsUserGet**
-> OpenAPI\Server\Model\ProjectResponse projectsUserGet($max_version, $limit, $offset, $flavor)
+> OpenAPI\Server\Model\ProjectResponse projectsUserGet($max_version, $limit, $offset, $flavor, $attributes)
 
 Get the projects of the logged in user
 
@@ -706,7 +706,7 @@ class ProjectsApi implements ProjectsApiInterface
     /**
      * Implementation of ProjectsApiInterface#projectsUserGet
      */
-    public function projectsUserGet(string $max_version = null, int $limit = '20', int $offset = '0', string $flavor = null)
+    public function projectsUserGet(string $max_version = null, int $limit = '20', int $offset = '0', string $flavor = null, string $attributes = null)
     {
         // Implement the operation ...
     }
@@ -723,6 +723,7 @@ Name | Type | Description  | Notes
  **limit** | **int**|  | [optional] [default to 20]
  **offset** | **int**|  | [optional] [default to 0]
  **flavor** | **string**|  | [optional]
+ **attributes** | **string**|  | [optional]
 
 ### Return type
 

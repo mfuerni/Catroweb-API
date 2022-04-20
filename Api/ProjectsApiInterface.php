@@ -236,12 +236,13 @@ interface ProjectsApiInterface
    * @param \int    $limit           (optional, default to 20)
    * @param \int    $offset          (optional, default to 0)
    * @param \string $flavor          (optional)
+   * @param \string $attributes      (optional)
    * @param \int    $responseCode    The HTTP response code to return
    * @param \array  $responseHeaders Additional HTTP headers to return with the response ()
    *
    * @return \OpenAPI\Server\Model\ProjectResponse[]
    */
-  public function projectsUserGet(string $max_version = null, int $limit = 20, int $offset = 0, string $flavor = null, &$responseCode, array &$responseHeaders);
+  public function projectsUserGet(string $max_version = null, int $limit = 20, int $offset = 0, string $flavor = null, string $attributes = null, &$responseCode, array &$responseHeaders);
 
   /**
    * Operation projectsUserIdGet.
