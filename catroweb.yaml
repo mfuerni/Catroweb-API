@@ -674,6 +674,7 @@ paths:
         - $ref: '#/components/parameters/Limit'
         - $ref: '#/components/parameters/Offset'
         - $ref: '#/components/parameters/Flavor'
+        - $ref: '#/components/parameters/Attributes'
       responses:
         '200':
           description: "OK"
@@ -1251,6 +1252,15 @@ components:
       schema:
         $ref: '#/components/schemas/Offset'
 
+    Attributes:
+      name: attributes
+      in: query
+      schema:
+        type: string
+        description: "Comma-separated list of attributes to include in the response"
+        pattern: '^[a-zA-Z0-9\-_]+(,[a-zA-Z0-9\-_]+)*$'
+        example: "id,name,description"
+
     RefreshToken:
       name: X-Refresh
       in: header
@@ -1806,7 +1816,13 @@ components:
         views:
           type: integer
           example: 2
-        download:
+        downloads:
+          type: integer
+          example: 2
+        reactions:
+          type: integer
+          example: 2
+        comments:
           type: integer
           example: 2
         private:
