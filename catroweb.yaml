@@ -862,7 +862,7 @@ paths:
         - PandaAuth: []
       tags:
         - Projects
-      summary: 'Delete a project -- StatusCode: 501 - Not yet implemented'
+      summary: 'Delete a project'
       parameters:
         - $ref: '#/components/parameters/Uuid'
       responses:
@@ -1010,7 +1010,7 @@ paths:
         - PandaAuth: []
       tags:
         - "Notifications"
-      summary: 'Mark specified notification as read - StatusCode: 501 - Not yet implemented'
+      summary: 'Mark specified notification as read'
       parameters:
         - $ref: '#/components/parameters/NotificationsId'
       responses:
@@ -1027,7 +1027,7 @@ paths:
         - PandaAuth: []
       tags:
         - "Notifications"
-      summary: 'Mark all notifications as read -- StatusCode: 501 - Not yet implemented'
+      summary: 'Mark all notifications as read'
       responses:
         '204':
           $ref: '#/components/responses/NoContent'
@@ -1042,7 +1042,7 @@ paths:
         - PandaAuth: []
       tags:
         - "Notifications"
-      summary: 'Count the number of unseen notifications -- StatusCode: 501 - Not yet implemented'
+      summary: 'Count the number of unseen notifications'
       responses:
         '200':
           description: "OK"
@@ -1202,7 +1202,7 @@ paths:
     get:
       tags:
         - Search
-      summary: 'Search for projects, users,..  -- StatusCode: 501 - Not yet implemented'
+      summary: 'Search for projects, users,..'
       description: "The default is to search in all categories."
       parameters:
         - name: query
