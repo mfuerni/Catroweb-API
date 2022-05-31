@@ -94,7 +94,7 @@ paths:
 
     delete:
       security:
-        - PandaAuth: [ ]
+        - PandaAuth: []
       tags:
         - "Authentication"
       summary: "Expires refresh token"
@@ -381,7 +381,7 @@ paths:
 
     delete:
       security:
-        - PandaAuth: [ ]
+        - PandaAuth: []
       tags:
         - "User"
       summary: "Delete user account"
@@ -557,6 +557,8 @@ paths:
           $ref: '#/components/responses/BadRequest'
         '401':
           $ref: '#/components/responses/UnauthorizedError'
+        '403':
+          $ref: '#/components/responses/Forbidden'
         '406':
           $ref: '#/components/responses/NotAcceptable'
         '422':
@@ -695,6 +697,8 @@ paths:
           $ref: '#/components/responses/BadRequest'
         '401':
           $ref: '#/components/responses/UnauthorizedError'
+        '403':
+          $ref: '#/components/responses/Forbidden'
         '406':
           $ref: '#/components/responses/NotAcceptable'
 
@@ -803,7 +807,7 @@ paths:
         - $ref: '#/components/parameters/Uuid'
         - $ref: '#/components/parameters/Locale'
       security:
-        - PandaAuth: [ ]
+        - PandaAuth: []
       tags:
         - "Projects"
       summary: "Update details of a project"
@@ -1033,6 +1037,8 @@ paths:
           $ref: '#/components/responses/NoContent'
         '401':
           $ref: '#/components/responses/UnauthorizedError'
+        '403':
+          $ref: '#/components/responses/Forbidden'
         '404':
           $ref: '#/components/responses/NotFound'
 
@@ -1057,6 +1063,8 @@ paths:
               $ref: '#/components/headers/Content-Language'
         '401':
           $ref: '#/components/responses/UnauthorizedError'
+        '403':
+          $ref: '#/components/responses/Forbidden'
 
   ################################################
   # Media Library
@@ -2191,7 +2199,7 @@ components:
       properties:
         url:
           type: string
-          example:  https://www.surveylegend.com/survey/#/d29yZHByZXNzMTQzODU2~-MRPPYfbYj7-rPUTK3HH
+          example: https://www.surveylegend.com/survey/#/d29yZHByZXNzMTQzODU2~-MRPPYfbYj7-rPUTK3HH
           description: Url to a survey for the given language
 
     ######################################################
