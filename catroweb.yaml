@@ -2,7 +2,7 @@ openapi: 3.0.3
 info:
   title: "Catroweb API"
   description: "API for the Catrobat Share Platform"
-  version: "v1.0.74"
+  version: "v1.1.0"
   termsOfService: "https://share.catrob.at/pocketcode/termsOfUse"
   contact:
     name: "Catrobat"
@@ -476,6 +476,7 @@ paths:
             type: string
         - $ref: '#/components/parameters/Limit'
         - $ref: '#/components/parameters/Offset'
+        - $ref: '#/components/parameters/Attributes'
       responses:
         '200':
           description: "OK"
@@ -509,6 +510,7 @@ paths:
         - $ref: '#/components/parameters/MaxVersion'
         - $ref: '#/components/parameters/Limit'
         - $ref: '#/components/parameters/Offset'
+        - $ref: '#/components/parameters/Attributes'
         - $ref: '#/components/parameters/Flavor'
       responses:
         '200':
@@ -586,6 +588,7 @@ paths:
         - $ref: '#/components/parameters/MaxVersion'
         - $ref: '#/components/parameters/Limit'
         - $ref: '#/components/parameters/Offset'
+        - $ref: '#/components/parameters/Attributes'
         - $ref: '#/components/parameters/Flavor'
       responses:
         '200':
@@ -644,6 +647,7 @@ paths:
         - $ref: '#/components/parameters/MaxVersion'
         - $ref: '#/components/parameters/Limit'
         - $ref: '#/components/parameters/Offset'
+        - $ref: '#/components/parameters/Attributes'
         - $ref: '#/components/parameters/Flavor'
       responses:
         '200':
@@ -673,8 +677,8 @@ paths:
         - $ref: '#/components/parameters/MaxVersion'
         - $ref: '#/components/parameters/Limit'
         - $ref: '#/components/parameters/Offset'
-        - $ref: '#/components/parameters/Flavor'
         - $ref: '#/components/parameters/Attributes'
+        - $ref: '#/components/parameters/Flavor'
       responses:
         '200':
           description: "OK"
@@ -704,6 +708,7 @@ paths:
         - $ref: '#/components/parameters/MaxVersion'
         - $ref: '#/components/parameters/Limit'
         - $ref: '#/components/parameters/Offset'
+        - $ref: '#/components/parameters/Attributes'
         - $ref: '#/components/parameters/Flavor'
       responses:
         '200':
@@ -793,6 +798,65 @@ paths:
           $ref: '#/components/responses/NotFound'
         '406':
           $ref: '#/components/responses/NotAcceptable'
+    put:
+      parameters:
+        - $ref: '#/components/parameters/Uuid'
+        - $ref: '#/components/parameters/Locale'
+      security:
+        - PandaAuth: [ ]
+      tags:
+        - "Projects"
+      summary: "Update details of a project"
+      description:
+        "
+          Update one of your projects. All attributes are optional.
+          For example you can update only the description.
+          Or you can update multiple attributes at once.
+        "
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdateProjectRequest'
+      responses:
+        '204':
+          description: "Project successfully updated"
+          # Content hack necessary else OpenAPI-generator will ignore content for error responses (hopefully fixed sometime)
+          content:
+            application/json:
+              schema:
+                type: object
+        '401':
+          $ref: '#/components/responses/InvalidCredentials'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '406':
+          $ref: '#/components/responses/NotAcceptable'
+        '422':
+          description: "Unprocessable Entity. (Specific error messages will be translated to the locale)"
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UpdateProjectErrorResponse'
+          headers:
+            X-Response-Hash:
+              $ref: '#/components/headers/X-Response-Hash'
+            Content-Language:
+              $ref: '#/components/headers/Content-Language'
+        '500':
+          description: "Server error"
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UpdateProjectFailureResponse'
+          headers:
+            X-Response-Hash:
+              $ref: '#/components/headers/X-Response-Hash'
+            Content-Language:
+              $ref: '#/components/headers/Content-Language'
     delete:
       security:
         - PandaAuth: []
@@ -885,6 +949,7 @@ paths:
         - $ref: '#/components/parameters/MaxVersion'
         - $ref: '#/components/parameters/Limit'
         - $ref: '#/components/parameters/Offset'
+        - $ref: '#/components/parameters/Attributes'
         - $ref: '#/components/parameters/Flavor'
       responses:
         '200':
@@ -918,6 +983,7 @@ paths:
       parameters:
         - $ref: '#/components/parameters/Limit'
         - $ref: '#/components/parameters/Offset'
+        - $ref: '#/components/parameters/Attributes'
         - $ref: '#/components/parameters/NotificationsType'
       responses:
         '200':
@@ -1011,6 +1077,7 @@ paths:
           description: "Name of the package"
         - $ref: '#/components/parameters/Limit'
         - $ref: '#/components/parameters/Offset'
+        - $ref: '#/components/parameters/Attributes'
       responses:
         '200':
           description: "OK"
@@ -1038,6 +1105,7 @@ paths:
       parameters:
         - $ref: '#/components/parameters/Limit'
         - $ref: '#/components/parameters/Offset'
+        - $ref: '#/components/parameters/Attributes'
         - $ref: '#/components/parameters/Flavor'
       responses:
         '200':
@@ -1069,6 +1137,7 @@ paths:
             example: 123
           required: true
           description: "ID of any given media file"
+        - $ref: '#/components/parameters/Attributes'
       responses:
         '200':
           description: OK
@@ -1099,9 +1168,10 @@ paths:
           required: true
           schema:
             type: string
-        - $ref: '#/components/parameters/Flavor'
         - $ref: '#/components/parameters/Limit'
         - $ref: '#/components/parameters/Offset'
+        - $ref: '#/components/parameters/Attributes'
+        - $ref: '#/components/parameters/Flavor'
         - name: package_name
           description: "In which package you want to search (for more fine tuned results)"
           example: "looks"
@@ -1201,6 +1271,9 @@ components:
 
     InvalidIdToken:
       description: "Invalid Client ID token"
+
+    Forbidden:
+      description: "Insufficient privileges, action not allowed."
 
   ##############################################
   # Security Schemes
@@ -1477,6 +1550,19 @@ components:
         download_url:
           type: string
           example: "https://share.catrob.at/pocketcode/download-media/983.png"
+        size:
+          type: integer
+          description: Size of the file in bytes
+          example: 1048576
+        file_type:
+          type: string
+          description: Type of the media file
+          enum:
+            - "project"
+            - "image"
+            - "sound"
+            - "video"
+            - "other"
 
 
     ##############################################
@@ -1562,6 +1648,18 @@ components:
           example: password
           # no min/max specification in order to handle the errors in catroweb instead of the autogenerated controllers.
           description: 'A secure password | minLength: 6 | maxLength: 4096'
+        picture:
+          type: string
+          example: "data:image/jpeg;base64,/9j/4AAQSkZJRgABAQ…"
+          description: "The profile picture of the user in data URI scheme."
+        about:
+          type: string
+          example: "My name is Irving and I love developing games with Pocket Code!"
+          description: "An introduction of the user."
+        currentlyWorkingOn:
+          type: string
+          example: "The next awesome game!"
+          description: "A short description about the project the user is currently working on."
 
     ResetPasswordRequest:
       type: object
@@ -1581,6 +1679,13 @@ components:
       allOf:
         - $ref: '#/components/schemas/DryRun'
         - $ref: '#/components/schemas/BaseUser'
+        - type: object
+          properties:
+            currentPassword:
+              type: string
+              format: password
+              example: current password
+              description: 'The current password of the user. Required for changing the password.'
 
     ProjectReportRequest:
       type: object
@@ -1622,6 +1727,18 @@ components:
           type: string
           example: "Catroweb"
           description: "Nickname of the user"
+        picture:
+          type: string
+          example: "data:image/jpeg;base64,/9j/4AAQSkZJRgABAQ…"
+          description: "The profile picture of the user in data URI scheme."
+        about:
+          type: string
+          example: "My name is Irving and I love developing games with Pocket Code!"
+          description: "An introduction of the user."
+        currentlyWorkingOn:
+          type: string
+          example: "The next awesome game!"
+          description: "A short description about the project the user is currently working on."
         projects:
           type: integer
           example: 4
@@ -1693,6 +1810,15 @@ components:
             - "Password too short"
             - "Password too long"
             - "Password contains invalid chars"
+        currentPassword:
+          type: string
+          enum:
+            - "Current password is missing"
+            - "Current password is wrong"
+        picture:
+          type: string
+          enum:
+            - "Profile picture invalid or not supported"
 
     ResetPasswordErrorResponse:
       type: object
@@ -1731,12 +1857,67 @@ components:
         - checksum
         - file
 
+    UpdateProjectRequest:
+      type: object
+      properties:
+        name:
+          type: string
+          example: My amazing project
+          description: 'The name of the project. minLength: 1 | maxLength: 255'
+        description:
+          type: string
+          description: 'A description of the project.'
+        credits:
+          type: string
+          description: 'Credits and notes for the project. E.g., credits for using ideas, scripts or artwork from other people.'
+        private:
+          type: boolean
+          example: false
+          description: 'Whether a project is publicly visible (false) or only via direct link (true).'
+        screenshot:
+          type: string
+          example: "data:image/jpeg;base64,/9j/4AAQSkZJRgABAQ…"
+          description: "An image representing the project in data URI scheme."
+
+
+    ## Response
+
     UploadErrorResponse:
       type: object
       properties:
         error:
           type: string
           example: "There is a problem"
+
+    UpdateProjectErrorResponse:
+      type: object
+      properties:
+        name:
+          type: string
+          enum:
+            - "Name empty"
+            - "Name too long"
+        description:
+          type: string
+          enum:
+            - "Description too long"
+        credits:
+          type: string
+          enum:
+            - "Credits too long"
+        screenshot:
+          type: string
+          enum:
+            - "Project screenshot invalid or not supported"
+
+    UpdateProjectFailureResponse:
+      type: object
+      properties:
+        error:
+          type: string
+          enum:
+            - "Failed saving details of the project."
+            - "Failed reading, converting or storing the screenshot. Please check your input."
 
     FeaturedProjectsResponse:
       type: array
@@ -1897,6 +2078,10 @@ components:
           type: string
           example: "Game"
           description: "The translated text of the project tag."
+
+    ######################################################
+    # Notification Schemas
+    ###
 
     NotificationsId:
       type: integer
