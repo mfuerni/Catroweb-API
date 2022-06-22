@@ -2,7 +2,7 @@ openapi: 3.0.3
 info:
   title: "Catroweb API"
   description: "API for the Catrobat Share Platform"
-  version: "v1.1.0"
+  version: "v1.1.14"
   termsOfService: "https://share.catrob.at/pocketcode/termsOfUse"
   contact:
     name: "Catrobat"
@@ -584,7 +584,9 @@ paths:
           schema:
             type: string
             description: 'Indication what platform should be used (ios, android)'
+            default: ""
             enum:
+              - ""
               - "android"
               - "ios"
         - $ref: '#/components/parameters/MaxVersion'
@@ -1186,6 +1188,7 @@ paths:
           in: query
           schema:
             type: string
+            default: ''
       responses:
         '200':
           description: OK
@@ -1306,6 +1309,7 @@ components:
       schema:
         type: string
         description: "ISO_639-1 or ISO_3166-1 locale of the user. Defaults internally to en"
+        default: 'en'
 
     Uuid:
       name: id
@@ -1320,6 +1324,7 @@ components:
       schema:
         type: string
         example: "luna"
+        default: ''
 
     Limit:
       name: limit
@@ -1341,6 +1346,7 @@ components:
         description: "Comma-separated list of attributes to include in the response"
         pattern: '^[a-zA-Z0-9\-_]+(,[a-zA-Z0-9\-_]+)*$'
         example: "id,name,description"
+        default: ''
 
     RefreshToken:
       name: X-Refresh
@@ -1365,7 +1371,14 @@ components:
       name: type
       in: query
       schema:
-        $ref: '#/components/schemas/NotificationsType'
+        type: string
+        enum:
+          - "all"
+          - "reaction"
+          - "follow"
+          - "comment"
+          - "remix"
+        default: "all"
 
     ##
     # Project specific
@@ -1407,6 +1420,7 @@ components:
       schema:
         type: string
         example: '0.999'
+        default: ''
       description:
         "
             Only shows project with a smaller version number than max version.\n
@@ -1422,7 +1436,7 @@ components:
       in: query
       schema:
         type: string
-        # default: all   # Enum Default is currently not working with OpenAPI Generator
+        default: all
         enum:
           - "all"
           - "projects"
@@ -1856,11 +1870,14 @@ components:
           description: 'The *.catrobat project file'
         flavor:
           type: string
+          default: "pocketcode"
           example: "pocketcode"
           description: "The flavor of this project"
         private:
           type: boolean
           description: "Indicates whether a program should be private"
+          default: false
+          example: false
       required:
         - checksum
         - file
@@ -1990,46 +2007,63 @@ components:
         id:
           type: string
           example: "1234abcd-12ab-12ab-12ab-123456abcdef"
+          description: 'The unique identifier of the project'
         name:
           type: string
+          description: 'The name of the project. minLength: 1 | maxLength: 255'
           example: "My example project"
         author:
           type: string
+          description: "The name of the projects' author"
           example: "Catrobat"
         description:
           type: string
+          description: 'A description of the project.'
           example: "Check out my very cool project!"
+        credits:
+          type: string
+          description: 'Credits and notes for the project. E.g., credits for using ideas, scripts or artwork from other people.'
+          example: "Special thanks to all contributors!"
         version:
           type: string
+          description: "The catrobat version that was used to create this project."
           example: 0.9.66
         views:
           type: integer
+          description: "The projects' count of views"
           example: 2
         downloads:
           type: integer
+          description: "The projects' count of downloads"
           example: 2
         reactions:
           type: integer
+          description: "The projects' count of reactions"
           example: 2
         comments:
           type: integer
+          description: "The projects' count of comments"
           example: 2
         private:
           type: boolean
+          description: 'Whether a project is publicly visible (false) or only via direct link (true).'
           example: false
         flavor:
           type: string
           example: "pocketcode"
         tags:
           type: array
+          description: 'Tags allow projects to be categorized by their creators'
           items:
             type: string
           example: ["game", "art"]
         uploaded:
           type: integer
+          description: 'The time of the upload.'
           example: 1575562569
         uploaded_string:
           type: string
+          description: 'A localised text interpretation of the uploaded timestamp'
           example: 11 minutes ago
         screenshot_large:
           type: string
@@ -2041,16 +2075,18 @@ components:
             "https://share.catrob.at/resources/thumbnails/screen_1234abcd-12ab-12ab-12ab-123456abcdef.png"
         project_url:
           type: string
+          description: 'The url to the project on our official share community platform'
           example:
             "https://share.catrob.at/pocketcode/project/1234abcd-12ab-12ab-12ab-123456abcdef"
         download_url:
           type: string
+          description: 'The url to GET the catrobat file of this project'
           example:
-            "https://share.catrob.at/pocketcode/download/1234abcd-12ab-12ab-12ab-123456abcdef.catrobat"
+            "https://share.catrob.at/api/project/1234abcd-12ab-12ab-12ab-123456abcdef/catrobat"
         filesize:
           type: number
           example: 0.14381762458251943
-          description: "filesize in megabytes"
+          description: "The filesize of the catrobat file in megabytes"
 
     ExtensionsResponse:
       type: array
@@ -2097,16 +2133,6 @@ components:
       description: "Id of a notification"
       default: 0
       example: 2
-
-    NotificationsType:
-      type: string
-      enum:
-        - "all"
-        - "reaction"
-        - "follow"
-        - "comment"
-        - "remix"
-      default: "all"
 
     NotificationsCountResponse:
       type: object
